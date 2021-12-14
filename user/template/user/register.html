@@ -2,14 +2,16 @@
 {% load static %}
 
 {% block img %}
-        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon" xmlns="http://www.w3.org/1999/html">
         <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
 {% endblock img %}
 
 {% block style %}
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" />
+  <!-- font awesome 5.13.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'user/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
-
+    <script src="{% static 'user/show_pass.js' %}?{% now 'U' %}" defer ></script>
 {% endblock style %}
 
 {% block title %}
@@ -26,10 +28,21 @@ SIGN UP
                                 <form action="{% url 'user:register' %}" method="post">
                                     {% csrf_token %}
                                     <div class="form-group mb-3"><input name="inputUsername" type="text" placeholder="Username" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"></div>
-                                    <div class="form-group mb-3"> <input name="inputPassword" type="password" placeholder="Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger"></div>
-                                    <div class="form-group mb-3"> <input name="reInputPassword" type="password" placeholder="Re-enter your password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger"></div>
+                                    <div class="form-group mb-3">
+                                        <input value="{{ password_random }}"  name="inputPassword" id="password" type="password" placeholder="Password"  class="form-control rounded-pill border-0 shadow-sm px-4 text-danger" required>
+                                        <button class="btn1 btn-outline-secondary" type="button" id="btnPassword">
+                                            <span class="fas fa-eye"></span>
+                                        </button>
+                                    </div>
+
+
+                                    <div class="form-group mb-3"> <input value="{{ password_random }}" name="reInputPassword" id="password2" type="password" placeholder="Re-enter your password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger"></div>
+                                    <button class="btn2 btn-outline-secondary" type="button" id="btnPassword1">
+                                            <span class="fas fa-eye"></span>
+                                    </button>
                                     <p>{{ error }}</p>
                                     <button type="submit" class="btn btn-danger btn-block text-uppercase mb-2 rounded-pill shadow-sm">Sign up</button>
+                                    <a href="{% url 'user:random_password' %}"><button type="button" class="btn btn-success btn-block text-uppercase mb-2 rounded-pill shadow-sm">Random password</button></a>
                                     <p> OR &nbsp<a href="{% url 'user:login' %}" class="font-italic .text-primary"> <u>You had account</u></a></p>
                                 </form>
                             </div>

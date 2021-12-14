@@ -399,3 +399,20 @@ tr td:first-child:before
 h1{
      font-family: sans-serif;
 }
+
+.drop-zone{
+    max-width: 200px;
+    height: 200px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justif-content:center;
+    text-align:center;
+    font-family: 'Quicksand',sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+    color: #cccccc;
+    border: 4px dashed #009578;
+    border-radius: 10px;
+}

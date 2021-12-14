@@ -1,3 +1,5 @@
+import string
+import random
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.views import View
@@ -28,6 +30,7 @@ def whiteSpace(s):
 class Register(View):
 
     def  get(self, request):
+
         return render(request, 'user/register.html')
     def post(self, request):
         username = request.POST.get('inputUsername')
@@ -158,3 +161,10 @@ class ChangePassword(LoginRequiredMixin, View):
         my_user = authenticate(username=user.username, password=password_new)
         login(request, my_user)
         return redirect("/")
+
+def randomPassword(request):
+    chars_fixed = string.ascii_letters + string.digits
+    min_size_pass = 8
+    max_size_pass = 15
+    password = "".join(random.choice(chars_fixed) for x in range(random.randint(min_size_pass, max_size_pass)))
+    return render(request, 'user/register.html',{'password_random':password})

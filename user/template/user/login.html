@@ -7,7 +7,11 @@
 {% endblock img %}
 
 {% block style %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" />
+  <!-- font awesome 5.13.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'user/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
+    <script src="{% static 'user/show_pass.js' %}?{% now 'U' %}" defer ></script>
 {% endblock style %}
 
 {% block title %}
@@ -23,7 +27,11 @@ LOGIN
                                 <form action="{% url 'user:login' %}" method="post">
                                     {% csrf_token %}
                                     <div class="form-group mb-3"> <input name="username" type="text" placeholder="Username" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"> </div>
-                                    <div class="form-group mb-3"> <input name="password" type="password" placeholder="Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger"><br> </div>
+                                    <div class="form-group mb-3"> <input name="password" id="password" type="password" placeholder="Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger">
+                                        <button class="btn1 btn-outline-secondary" type="button" id="btnPassword">
+                                            <span class="fas fa-eye"></span>
+                                        </button> </div>
+
                                     <p>{{ error }}</p>
                                     <button type="submit" class="btn btn-danger btn-block text-uppercase mb-2 rounded-pill shadow-sm">Sign in</button>
                                     <a href="{% url 'quizes:home' %}"><button type="button" class="btn btn-success btn-block text-uppercase mb-2 rounded-pill shadow-sm">Continue as Guest</button></a>

@@ -5,8 +5,6 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
-
-import quizes
 from questions.models import Question
 from .models import Quiz
 
@@ -118,6 +116,7 @@ class AddTest(LoginRequiredMixin,View):
                            time=test_time, required_score_to_pass =test_required_score, difficulty=test_level)
         question_len = len(Question.objects.filter(quiz=quiz)) + 1
         return render(request,'questions/add_questions.html',{'quiz_data': quiz, 'curren_len': question_len })
+
 
 class ChangeQuiz(LoginRequiredMixin, View):
     login_url = '/user/Login'
