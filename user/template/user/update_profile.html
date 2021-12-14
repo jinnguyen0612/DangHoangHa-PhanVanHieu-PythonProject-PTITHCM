@@ -1,0 +1,41 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}">
+{% endblock style %}
+
+{% block title %}
+UPDATE PROFILE
+{% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+{% block content %}
+
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-7 col-xl-6 mx-auto">
+                                <h3 class="display-4">UPDATE PROFILE</h3> <br>
+                                <form action="{% url 'user:update_profile' %}" method="post">
+                                    {% csrf_token %}
+
+                                    <div class="form-group mb-3"> <input  value="{{ request.user.username }}" name="username" type="text" placeholder="Username"  autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"> </div>
+                                    <div class="form-group mb-3"> <input value="{{ request.user.first_name }}" name="firstname" type="text" placeholder="Firstname" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"> </div>
+                                    <div class="form-group mb-3"> <input value="{{ request.user.last_name }}" name="lastname" type="text" placeholder="Lastname" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"> </div>
+                                    <div class="form-group mb-3"> <input value="{{ request.user.email }}" name="Email" type="email" placeholder="Email" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4"> </div>
+                                    <p>{{ error }}</p>
+                                    <button type="submit" class="btn btn-danger btn-block text-uppercase mb-2 rounded-pill shadow-sm">Save Change</button>
+                                    <a href="/user/change_password/"><button type="button" class="btn btn-success btn-block text-uppercase mb-2 rounded-pill shadow-sm">Change Password</button></a>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endblock content %}

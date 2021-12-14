@@ -1,0 +1,191 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block imguser %}
+
+{% endblock imguser %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen" >
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+{% endblock style %}
+
+
+{% block title %}HOME{% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+{% block content %}
+<div class="card border mt-3">
+    <div class="card-body">
+        <!-- CONTROL : START -->
+        <div class="row">
+            <div class="col-4">
+
+                    <form action="{% url 'quizes:view_search' %}" method="post">
+                        <div class="input-group">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" name="input_search" placeholder="Enter keyword ... " required minlength="1"/>
+                            <button class="btn btn-outline-info" type="submit" id="btn-search">Go!</button>
+                        </div>
+                        {{ error_search }}
+                    </form>
+
+
+            </div>
+            <div class="col-3 d-flex justify-content-center align-items-center">
+
+                <form action="{% url 'quizes:view_search' %}" method="post">
+                    {% csrf_token %}
+                    <div class="dropdown">
+                        <button name="button_sort" class="dropbtn" type="submit" value="{{ sort_by }}">Sort by</button>
+                            <form action="{% url 'quizes:view_search' %}" method="post">
+                                <div class="dropdown-content">
+                                    <button name="button_sort" class="btn bg-white" type="submit" value="Test Name-ASC">Test Name-ASC</button>
+                                    <button name="button_sort" class="btn bg-white" type="submit" value="Test Name-DESC">Test Name-DESC</button>
+                                    <button name="button_sort" class="btn bg-white" type="submit" value="Author-ASC">Author-ASC</button>
+                                    <button name="button_sort" class="btn bg-white" type="submit" value="Author-DESC">Author-DESC</button>
+                                </div>
+                            </form>
+                    </div>
+                </form>
+
+
+                <h3  class="mb-0"><span class="badge bg-success" id='badge'>{{ sort_by }}</span></h3>
+            </div>
+            <div class="col-5">
+                {% if request.user.username != '' %}
+                <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary btn-block" id="btn-task"data-toggle="modal" data-target="#exampleModal">ADD TEST</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">ADD TEST</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    </button>
+                                    </div>
+                                    <form action="{% url 'quizes:add_test' %}"  method="post" class="needs-validation">
+                                        {% csrf_token %}
+                                    <div class="modal-body">
+
+                                        <div class="form">
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Test's Name:</label>
+                                                <input  class="form-control" name="testName"
+                                                    type="text" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Topic:</label>
+                                                <input class="form-control" name="topic"
+                                                    type="text" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mb-1" id="">Number of question:</label>
+                                                <input min="1" class="form-control" name="num_question" type="number" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Time (min):</label>
+                                                <input min="1"  class="form-control" name="time_test"
+                                                    type="number" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Requires Score:</label>
+                                                <input max="100" min="1" class="form-control" name="required_score"
+                                                    type="number" required minlength="1">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="id_difficulty1" class="mb-1">Level:</label>
+                                                <select  name="test_level" class="form-control custom-select" required id="id_difficulty1">
+                                                    <option value="easy" selected="selected" >Easy</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="hard">Hard</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                    </form>
+
+                                </div>
+                                </div>
+                            </div>
+                 {% endif %}
+             </div>
+        </div>
+        <!-- CONTROL : END -->
+    </div>
+</div>
+<!-- LIST: START -->
+        <div class="card border mt-3">
+            <div class="card-header bg-success text-white">List Test</div>
+                <div class="card-body">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Serial</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Test Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="area-list-task">
+
+                        {% for obj in object_list %}
+                            <tr>
+                                    <td></td>
+                                    {% if obj.user.username == request.user.username %}
+                                        <td><a href="/user/update/">{{ obj.user.username }}</a></td>
+                                    {% else %}
+                                         <td>{{ obj.user.username }}</td>
+                                    {% endif %}
+
+                                    {% if  obj.is_empty == False %}
+                                     <td><a href="/view_test/{{ obj.pk }}/">{{ obj.name  }}</a></td>
+                                    {% else %}
+                                    <td>{{ obj.name }}</td>
+                                    {% endif %}
+
+                                    {% if obj.difficulty == 'easy' %}
+                                        <td><span class="badge bg-success">{{ obj.difficulty }}</span></td>
+                                    {% elif obj.difficulty == 'medium' %}
+                                        <td><span class="badge bg-warning">{{ obj.difficulty }}</span></td>
+                                    {% else  %}
+                                        <td><span class="badge bg-danger">{{ obj.difficulty }}</span></td>
+                                    {% endif %}
+                                <td>
+
+                                    {% if  obj.is_empty == False %}
+                                     <a href="/quiz_data_view/{{ obj.pk }}/"><button class="btn btn-success" type="submit" >Start</button></a>
+                                    {% else %}
+                                    <button class="btn btn-success" type="submit" >Start</button>
+                                    {% endif %}
+
+
+                                    {% if obj.user.username == request.user.username %}
+                                    <a href="/questions/view_list_question/{{ obj.pk }}/"><button class="btn btn-warning">Edit</button></a>
+                                    <a href="/delete_quiz/{{ obj.pk }}/"><button class="btn btn-danger">Delete</button></a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            <!-- LIST: END -->
+{% endblock content %}

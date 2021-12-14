@@ -1,0 +1,18 @@
+.signup,
+.login,
+.image {
+    min-height: 100vh
+}
+
+.bg-image {
+    background-size: cover;
+    background-position: center center
+}
+
+.bgGradient{
+    background: linear-gradient(to bottom, #92a3fe, #ff9eff);
+}
+
+.display-4{
+    color: white;
+}

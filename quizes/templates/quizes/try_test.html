@@ -1,0 +1,58 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<!--<script src="{% static 'quizes/dotest.js' %}?{% now 'U' %}" defer ></script>-->
+<script id="myJson" type="application/json" src="/quiz_data_view/1"></script>
+<script >
+    var questions = {{ data_test|safe }};
+    var time = {{ quize.time }};
+</script>
+
+{% endblock style %}
+
+{% block title %}HOME{% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+
+{% block content %}
+
+            <div class="quizContainer container-fluid well well-lg">
+
+                <div id="quiz1" class="text-center">
+                    <h3>Tên bài test:</h3>
+                    <h4 class="number-question" ><span >Total Question: </span><br/><span  style="font-size:25px;"> {{ quize.number_of_questions }}</span></h4>
+                    <h4 class="count-time"><span id="iTimeShow">Time Remaining: </span><br/><span id='timer' style="font-size:25px;"></span></h4>
+                    <h2 > {{ quize.name }} </h2>
+
+                </div>
+                
+<!--                <div class="question"></div>-->
+<!--                <ul class="choiceList"></ul>-->
+                <div class="quizMessage"></div>
+                <div class="result"></div>
+
+                <button class="preButton">Practice</button>
+                <button class="nextButton">Exam</button>
+<!--                <div class="submit-container">-->
+<!--                    <form action="{% url 'results:view_result' %}" method="post">-->
+<!--                        {% csrf_token %}-->
+<!--                        <input id="selected" name="selected" value="" hidden>-->
+<!--                        <input name="quiz_pk" value="{{ quize.pk }}" hidden >-->
+<!--                        <input id="my_score" name="score" value="0" hidden>-->
+<!--                        <button class="submit_btn" type="submit">Submit</button>-->
+<!--                        <button class="end_btn" type="button" name="">End Test</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+
+            </div>
+{% endblock content %}
+
+        

@@ -1,0 +1,78 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block imguser %}
+
+{% endblock imguser %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen" >
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+{% endblock style %}
+
+
+{% block title %}HOME{% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+{% block content %}
+<div class="card border mt-3">
+    <div class="card-body">
+        <h2 class="text-center"> ĐỒ ÁN MÔN PYTHON</h2>
+        <h3 class="text-center">Đề tài:</h3>
+        <h1 class="text-center text-danger">WEB TRẮC NGHIỆM VỚI DJANGO</h1>
+        <br>
+        <div class="row">
+            <div class="col">
+                <div class="font-weight-bold">Họ và tên sinh viên: Đặng Hoàng Hà
+                </div>
+                <div class="font-weight-bold">
+                    Mã số sinh viên: N19DCCN046
+                </div>
+                <div class="font-weight-bold">
+                    Lớp: D19CQCN03-N                                
+                </div>
+            </div>
+            <div class="col">
+                <div class="font-weight-bold">Họ và tên sinh viên: Phan Văn Hiểu
+                </div>
+                <div class="font-weight-bold">
+                    Mã số sinh viên: N19DCCN056
+                </div>
+                <div class="font-weight-bold">
+                    Lớp: D19CQCN03-N                                
+                </div>
+            </div>
+            
+        </div>
+        <br>
+        <div>
+            <h3>I. Giới thiệu đề tài:</h3>
+            <div>-	Như chúng ta đã thấy trong trình trạng COVID-19 diễn biến phức tạp hiện nay thì yêu cầu về các ứng dụng, trang web có hình thức thi, các trò chơi họp nhóm trực tuyến càng trở nên phổ biến và cần thiết.</div>
+            <div>-	Biết được nhu cầu đó Trang web “QUIZ APP” được chúng em xây dựng trên nền tảng backend của Python (bằng Module Django) sẽ đáp ứng nhu cầu cho mọi người về việc tạo một bài kiểm tra trắc nghiệm hay tổ chức các trò chơi trắc nghiệm tính điểm trực tuyến.</div>
+        </div>
+        <div>
+            <h3>II. Sơ lượt về trang web:</h3>
+
+            <h4 style="margin-left: 20px;">1.Ngôn ngữ và thư viện áp dụng:</h4>
+            <div>- Ngôn ngữ sử dụng: HTML, CSS, JavaScript, Python</div>
+            <div>- Thư viện sử dụng: Jquery, Bootstrap 4, Django, re, datetime, json, passlib, addmin.css</div>
+
+            <h4 style="margin-left: 20px;">2.Tóm tắt chức năng trang web:</h4>
+            <div>-	Trang web “QUIZ APP” bao gồm các chức năng cơ bản đảm bảo việc thực hiện, thêm, xóa, chỉnh sửa các bài trắc nghiệm cụ thể như sau:
+                <div style="margin-left: 10px;">●Cho phép người dùng làm bài trắc nghiệm</div>
+                <div style="margin-left: 10px;">●Xem trước bài trắc nghiệm</div>
+                <div style="margin-left: 10px;">●Hiện số điểm đã làm được và lưu dữ liệu khi hoàn thành bài trắc nghiệm</div>
+                <div style="margin-left: 10px;">●Đăng nhập và đăng ký tài khoản để có thể thêm, xóa, chỉnh sửa các bài trắc nghiệm của người dùng đã tạo
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,44 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+
+{% endblock style %}
+
+{% block title %}HOME{% endblock title %}
+{% block username %}
+    {{ request.user.username }}
+{% endblock username %}
+
+
+{% block content %}
+            <div class="quizContainerSmall container-fluid well well-lg">
+                <div id="quiz1" class="text-center">
+                    <h3>Test's Name:</h3>
+                   <h4 class="number-question" ><span >Total Question: </span><br/><span  style="font-size:25px;"> {{ quize.number_of_questions }} Qu.</span></h4>
+                    <h4 class="count-time"><span id="iTimeShow">Time Remaining: </span><br/><span id='timer' style="font-size:25px;">{{ quize.time }} min</span></h4>
+                    <h2 > {{ quize.name }} </h2>
+                </div>
+                
+                <div class="question">Your's score: {{ score }} </div>
+                <div class="question">Required score to pass: {{ quize.required_score_to_pass }} </div>
+                {% if score >=  quize.required_score_to_pass %}
+                    <div class="question">Congratulations! You passed!</div>
+                {% else %}
+                    <div class="question">You didn't pass! Let's try again!</div>
+                {% endif %}
+                <a href="/questions/view_answer/{{ quize.pk }}/" ><button class="submitBtn">View Answer</button></a>
+                {% if request.user.username != '' %}
+                <a href="/results/export_result/{{ result.pk }}/" ><button class="submitBtn">Export Result</button></a>
+                {% endif %}
+            </div>
+{% endblock content %}
+
+        

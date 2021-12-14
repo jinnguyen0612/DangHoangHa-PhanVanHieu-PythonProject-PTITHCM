@@ -1,0 +1,185 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+{% block img %}
+<link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block title %} VIEW LIST QUESTION{% endblock title %}
+
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<script src="js/addtest.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">-->
+
+<link rel="stylesheet" type="text/css" href="/static/admin/css/changelists.css">
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+<script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+{% endblock style %}
+{% block content %}
+<div class="card border mt-3">
+    <div class="card-body">
+        <!-- CONTROL : START -->
+        <div class="row">
+            <div class="col-4">
+                <div class="input-group">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-block" id="btn-task" data-toggle="modal" data-target="#exampleModal">EDIT TEST</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">EDIT TEST</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    </button>
+                                </div>
+                                <form class="needs-validation" method="post" action="/change_quiz/{{ quiz_data.pk }}/">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+
+                                        <div class="form">
+                                            <div class="form-group">
+                                                <label for="" id="" class="mb-1">Test's Name:</label>
+                                                <input class="form-control" name="testName" type="text" value="{{ quiz_data.name }}" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Topic:</label>
+                                                <input value="{{ quiz_data.topic }}" class="form-control" name="topic" type="text" required minlength="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Number of question:</label>
+                                                {% if quiz_data.get_questions|length != 0 %}
+                                                <input value="{{ quiz_data.number_of_questions }}" class="form-control" name="num_question" type="number"  required minlength="1" min="{{ quiz_data.get_questions|length }}">
+                                                {% else %}
+                                                <input value="{{ quiz_data.number_of_questions }}" class="form-control" name="num_question" type="number"  required minlength="1" min="1">
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Time (min):</label>
+                                                <input value="{{ quiz_data.time }}" class="form-control" name="time_test" type="number" required minlength="1" min="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="mb-1">Requires Score:</label>
+                                                <input value="{{ quiz_data.required_score_to_pass }}" class="form-control" name="required_score" type="number" minlength="1" min="1" max="100">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="id_difficulty" class="mb-1">Level:</label>
+                                                <select name="test_level" class="form-control custom-select" required id="id_difficulty">
+                                                    {% if quiz_data.difficulty == "easy" %}
+                                                    <option value="easy" selected>easy</option>
+                                                    <option value="medium">medium</option>
+                                                    <option value="hard">hard</option>
+                                                    {% elif quiz_data.difficulty == "medium" %}
+                                                    <option value="easy">easy</option>
+                                                    <option value="medium" selected>medium</option>
+                                                    <option value="hard">hard</option>
+                                                    {% else %}
+                                                    <option value="easy">easy</option>
+                                                    <option value="medium">medium</option>
+                                                    <option value="hard" selected>hard</option>
+                                                    {% endif %}
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Edit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL : END -->
+    </div>
+</div>
+<!-- LIST: START -->
+<div class="card border mt-3">
+    <div class="card-header bg-success text-white">Test Name: {{ quiz_data.name }} - {{ quiz_data.topic }}</div>
+    <!-- Container -->
+    <div id="container">
+        <div class="breadcrumbs">
+            <!-- Content -->
+            <div id="content" class="flex">
+
+                <h3>Select question to change</h3>
+
+                <div id="content-main">
+                    <div class="module" id="changelist">
+                        <form id="changelist-form" method="post" novalidate>
+                            <input type="hidden" name="csrfmiddlewaretoken" value="gy1ezs9dpezzECGJvSubxgczFbSP70sqOSLtESNZ33JKgvZrr26jAOgpTapO5G29">
+                            <div class="actions">
+                                <input type="hidden" name="select_across" value="0" class="select-across">
+                            </div>
+                            <div class="results">
+                                <table id="result_list">
+                                    <thead>
+                                        <tr>
+                                            </th>
+                                            <th scope="col" class="column-__str__">
+
+                                                <div class="text">
+                                                    <label>Question</label>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for obj in object_list %}
+
+                                        <tr class="row1">
+                                            <td></td>
+                                            <th class="field-__str__"><a href="/questions/change_question/{{ quiz_data.pk }}/{{ obj.pk }}/"><h6 class="font-weight-bold">{{ obj.text }}</h6></a>
+                                            </th>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="paginator">
+                                {{ object_list|length }} questions
+                            </p>
+                        </form>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+            <!-- END Content -->
+            <div id="footer"></div>
+        </div>
+        <!-- END Container -->
+    </div>
+    <div>
+        {% if quiz_data.number_of_questions != object_list|length %}
+        <a href="/questions/add_new/{{ quiz_data.pk }}/">
+            <button class="badge badge-warning" id="btn-save-question"><i class="fa fa-plus"></i> ADD NEW</button>
+        </a>
+        {% endif %}
+    </div>
+</div>
+</div>
+</div>
+<!-- LIST: END -->
+{% endblock content %}

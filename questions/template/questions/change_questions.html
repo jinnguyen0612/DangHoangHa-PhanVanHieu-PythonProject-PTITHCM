@@ -1,0 +1,178 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen" >
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<script src="{% static 'questions/addtest.js' %}?{% now 'U' %}" defer></script>
+<!--<script>addfaqs2();</script>-->
+
+
+
+{% endblock style %}
+
+{% block title %}CHANGE QUESTION{% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+{% block content %}
+<div class="card border mt-3">
+    <div class="card-body">
+        <!-- CONTROL : START -->
+        <div class="row">
+            <div class="col-4">
+                <div class="input-group">
+                    <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-block" id="btn-task"data-toggle="modal" data-target="#exampleModal">EDIT TEST</button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">EDIT TEST</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </button>
+                        </div>
+                        <form class="needs-validation" method="post" action="/change_quiz/{{ quiz_data.pk }}/">
+                            {% csrf_token %}
+                            <div class="modal-body">
+
+                                <div class="form">
+                                    <div class="form-group">
+                                        <p for="" class="mb-1">Test's Name:</p>
+                                        <input  class="form-control" name="testName"
+                                            type="text" value="{{ quiz_data.name }}" required minlength="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <p for="" class="mb-1">Topic:</p>
+                                        <input  value="{{ quiz_data.topic }}" class="form-control" name="topic"
+                                            type="text" required minlength="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <p for="" class="mb-1">Number of question:</p>
+                                        {% if quiz_data.get_questions|length != 0 %}
+                                        <input value="{{ quiz_data.number_of_questions }}" class="form-control" name="num_question" type="number"  required minlength="1" min="{{ quiz_data.get_questions|length }}">
+                                        {% else %}
+                                        <input value="{{ quiz_data.number_of_questions }}" class="form-control" name="num_question" type="number"  required minlength="1" min="1">
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <p for="" class="mb-1">Time (min):</p>
+                                        <input  value="{{ quiz_data.time }}" class="form-control" name="time_test"
+                                            type="number" required minlength="1" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <p for="" class="mb-1">Requires Score:</p>
+                                        <input  value="{{ quiz_data.required_score_to_pass }}"  class="form-control"  name="required_score"
+                                            type="number" required minlength="1" min="1" max="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <p for="id_difficulty" class="mb-1">Level:</p>
+                                        <select name="test_level" required id="id_difficulty">
+                                            {% if quiz_data.difficulty == "easy" %}
+                                                <option value="easy" selected >easy</option>
+                                                <option value="medium">medium</option>
+                                                <option value="hard">hard</option>
+                                            {% elif quiz_data.difficulty == "medium" %}
+                                                <option value="easy" >easy</option>
+                                                <option value="medium" selected>medium</option>
+                                                <option value="hard">hard</option>
+                                            {% else %}
+                                                <option value="easy" >easy</option>
+                                                <option value="medium">medium</option>
+                                                <option value="hard" selected>hard</option>
+                                            {% endif %}
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL : END -->
+    </div>
+</div>
+<!-- LIST: START -->
+<div class="card border mt-3">
+    <div class="card-header bg-success text-white">Test Name: {{ quiz_data.name }} - {{ quiz_data.topic }}</div>
+    <form action="{% url 'questions:save_update_question' %}" method="post">
+    <div class="input-group">
+        <p style="font-weight: bold; font-size:20px;" class="col-md-1">Question:</p>
+        <input  value="{{ question.text }}" name="question_text" type="text" id="input-Question" placeholder="Enter the question" class="col-md-10" required minlength="1"/>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 table-responsive">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="faqs" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Chosen</th>
+                                <th>Answer</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <script> var count =0;
+                                    var faqs_row = 0;</script>
+
+                               <script>
+                               {% for a in question.get_answers %}
+                                    html = '<tr id="faqs-row' + faqs_row + '">';
+                                    html += '<td><input type="text" class="form-control" placeholder="Chosen" name="chosen" id="chosen" value="{{ a.text }}" required minlength="1"></td>';
+                                    {% if a.correct == True %}
+                                    html += `<td><input required minlength="1" class="radio_animated" id="edo-ani answer" type="radio" name="is_Answer" value=${count} checked></td>`;
+                                    {% else %}
+                                    html += `<td><input required minlength="1"  class="radio_animated" id="edo-ani answer" type="radio" name="is_Answer" value=${count} ></td>`;
+                                    {% endif %}
+                                    html += '<td class="mt-10"><button class="badge badge-danger" onclick="$(\'#faqs-row' + faqs_row + '\').remove(); count--; faqs_row++;"><i class="fa fa-trash"></i> Delete</button></td>';
+                                    html += '</tr>';
+
+                                $('#faqs tbody').append(html);
+                                count++;
+                                faqs_row++;
+                                {% endfor %}
+                                </script>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center"><button onclick="addfaqs();" class="badge badge-success"><i class="fa fa-plus"></i> ADD NEW</button></div>
+
+                    {% csrf_token %}
+                <br>
+                    <div class="flex-btn">
+
+<!--                        <button class="badge badge-warning" type="submit" onclick="getValue();" id="btn-save-question"><i class="fa fa-plus"></i> SAVE QUESTION</button>-->
+                        <button type="submit" onclick="getValue();" class="btn-save-question badge badge-warning flex-iteam"><i class="fa fa-plus"></i> SAVE QUESTION</button>
+                        <a href="/questions/delete_questions/{{ question.pk }}/"><button type="button" class="badge badge-danger flex-iteam" id="btn-del-question" ><i class="fa fa-trash"></i> DELETE QUESION</button></a>
+                    </div>
+                    <input value="{{ quiz_data.pk }}" name="quiz_pk" hidden >
+                    <input value="{{ question.pk }}" name="question_pk" hidden>
+                    <input value="" name="question" id="question" hidden>
+                    <input value="" name="answer_list" id="answer_list" required minlength="1" hidden>
+                    <input value="" name="correct_answer" id="correct_answer" hidden>
+            </div>
+        </div>
+    </div>
+    </form>
+
+</div>
+<!-- LIST: END -->
+{% endblock content %}

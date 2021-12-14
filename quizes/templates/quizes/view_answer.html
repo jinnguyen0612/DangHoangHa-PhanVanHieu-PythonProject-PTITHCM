@@ -1,0 +1,55 @@
+{% extends "quizes/base.html" %}
+{% load static %}
+
+{% block img %}
+        <link rel="icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'quizes/logo.png' %}" type="image/x-icon">
+{% endblock img %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'quizes/style.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<link rel="stylesheet" href="{% static 'quizes/admin.css' %}?{% now 'U' %}" type="text/css" media="screen">
+<script >
+    var questions = {{ data_test|safe }};
+    var time = {{ quize.time }};
+</script>
+
+{% endblock style %}
+
+{% block title %}VIEW ANSWER {% endblock title %}
+{% block username %}{{ request.user.username }}{% endblock username %}
+
+
+{% block content %}
+    <div class="quizContainerSmall container-fluid well well-lg">
+        <div id="quiz1" class="text-center">
+            <h3> Test's name:</h3>
+            <h4 class="number-question" ><span >Total Question: </span>
+                <br/><span  style="font-size:25px;"> {{ quize.number_of_questions }} q.</span></h4>
+            <h4 class="count-time"><span id="iTimeShow">Time Remaining: </span>
+                <br/><span id='timer' style="font-size:25px;">{{ quize.time }} min</span></h4>
+            <h2 > {{ quize.name }} </h2>
+        </div>
+    </div>
+    <div class="quizContainer container-fluid well well-lg">
+      {% for q in quize.get_questions %}
+           <div class="question">{{ q.text }}</div>
+          {% for a in q.get_answers %}
+              {% if a.correct == True %}
+                <ul class="choiceList">
+                <li style="border:2px solid green;margin-top:10px;">
+                    <input disabled type="radio" class="radio-inline" checked="checked" name="dynradio" > {{ a.text }}</li>
+                </ul>
+              {%  else %}
+               <ul class="choiceList">
+               <li>
+                   <input disabled type="radio" class="radio-inline"  name="dynradio" />{{ a.text }}</li>
+               </ul>
+              {% endif %}
+          {% endfor %}
+      {%  endfor %}
+   </div>
+  <a href="{% url 'quizes:home' %}"><button class="submitBtn">Close</button></a>
+{% endblock content %}
+
+        
