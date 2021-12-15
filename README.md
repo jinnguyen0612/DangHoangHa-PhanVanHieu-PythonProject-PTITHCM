@@ -23,6 +23,7 @@ Python Project of N19DCCN046 & N19DCCN056  form D19CQCN03-N PTITHCM
       - pip3 install Django
   - Installing Module in project:
     - python -m pip install -r requirements. txt
+- Download This Project Zip Folder Extract it
   - Run the Django Application:
     - python manage.py runserver
 - Now enter following URL in Your Browser Installed On Your Pc
